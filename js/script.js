@@ -8,6 +8,7 @@ fetch(url)
     .then(res => res.json())
     .then(data =>{
         peopleArray = data.results;
+        console.log(peopleArray);
         generatePeople(peopleArray);
         generateModal(peopleArray);
         
@@ -55,8 +56,8 @@ function generateModal(data){
                 <p class="modal-text cap">${person.location.city}</p>
                 <hr>
                 <p class="modal-text">${person.phone}</p>
-                <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                <p class="modal-text">Birthday: 10/21/2015</p>
+                <p class="modal-text">${person.location.street.number} ${person.location.street.name}, ${person.location.city}, ${person.location.state} ${person.location.postcode}</p>
+                <p class="modal-text">Birthday: ${new Date(person.registered.date).toLocaleDateString()}</p>
             </div>
             <div class="modal-btn-container">
                 <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
