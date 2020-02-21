@@ -1,6 +1,7 @@
-const url = 'https://randomuser.me/api/?results=12';
+const url = 'https://randomuser.me/api/?results=12&nat=us';
 const gallery = document.querySelector('#gallery');
 const modalContainer = document.querySelector('.modal-container');
+const search = document.querySelector('#search-input');
 let peopleArray;
 
 //Fetchs data from API
@@ -8,11 +9,10 @@ fetch(url)
     .then(res => res.json())
     .then(data =>{
         peopleArray = data.results;
-        console.log(peopleArray);
         generatePeople(peopleArray);
         generateModal(peopleArray);
-        
     })
+    .catch(error => console.log('Looks like there was a problem!', error))
 
 
 //Generates people and inserts into HTML
@@ -72,25 +72,80 @@ function generateModal(data){
 //Pops up clicked card as a modal
 function popUpModal(cardId){
     let modals = document.querySelectorAll('.modal'); //Stores all modals
-    let closeButton = document.querySelectorAll('#modal-close-btn'); //Stores all close buttons
+    let closeButtons = document.querySelectorAll('#modal-close-btn'); //Stores all close buttons
+    let nextButtons = document.querySelectorAll('#modal-next');
+    let prevButtons = document.querySelectorAll('#modal-prev');
 
     //If card is clicked, pop up the correct model by checking the id
     modals.forEach((modal) => {
         if(modal.id == cardId){
             modalContainer.style.display = 'block';
+            modal.style.display = 'block';
         }else{
             modal.style.display = 'none';
         }
     });
 
     //Adds features to buttons when user clicks, it modifys css of modal-container and modals
-    closeButton.forEach((button) => button.addEventListener('click', () => {
+    closeButtons.forEach((button) => button.addEventListener('click', () => {
         modalContainer.style.display = 'none';
         modals.forEach((modal) =>{
             modal.style.display = 'block'
         })
     }));
+
+    //Toggles to next modal after button is clicked if there isn't any sibling then goes back to main page
+    nextButtons.forEach((button) => button.addEventListener('click', (e) => {
+        currentModal = e.currentTarget.parentNode.parentNode;
+        nextModal = e.currentTarget.parentNode.parentNode.nextElementSibling;
+
+        modals.forEach((modal) => {
+            if(nextModal == modal){
+                nextModal.style.display = 'block';
+            }
+            else{
+                modal.style.display = 'none';
+                if(!nextModal){
+                    modalContainer.style.display = 'none';
+                }
+            }
+        });
+    }));
+
+    //Toggles to previous modal after button is clicked, if there isn't any sibling then goes back to main page
+    prevButtons.forEach((button) => button.addEventListener('click', (e) => {
+        currentModal = e.currentTarget.parentNode.parentNode;
+        prevModal= e.currentTarget.parentNode.parentNode.previousElementSibling;
+
+        modals.forEach((modal) => {
+            if(prevModal == modal){
+                prevModal.style.display = 'block';
+            }
+            else{
+                modal.style.display = 'none';
+                if(!prevModal){
+                    modalContainer.style.display = 'none';
+                }
+            }
+        });
+    }));   
 }
+
+//Search functionality for directory
+search.addEventListener("keyup", (e) => {
+    e.preventDefault();
+    let names = document.querySelectorAll('.card-info-container #name');
+    let userInput = search.value;
+    names.forEach( name => {
+        if(name.textContent.toLowerCase().includes(userInput.toLowerCase())){
+            console.log(name.parentNode.parentNode);
+            name.parentNode.parentNode.style.display = 'flex';
+        }
+        else{
+            name.parentNode.parentNode.style.display = 'none';
+        }
+    })
+})
 
 
 
