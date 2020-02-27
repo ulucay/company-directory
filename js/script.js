@@ -51,7 +51,7 @@ function generateModal(data){
             <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
             <div class="modal-info-container">
                 <img class="modal-img" src="${person.picture.large}" alt="profile picture">
-                <h3 id="name" class="modal-name cap">name</h3>
+                <h3 id="name" class="modal-name cap">${person.name.first} ${person.name.last}</h3>
                 <p class="modal-text">${person.email}</p>
                 <p class="modal-text cap">${person.location.city}</p>
                 <hr>
